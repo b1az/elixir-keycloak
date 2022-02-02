@@ -29,3 +29,18 @@ jobs:
         run: mix format --check-formatted
       - name: Credo
         run: mix credo --mute-exit-status
+
+      - name: Retrieve cached PLT
+        uses: actions/cache@v2
+        id: plt-cache
+        with:
+          path: |
+            priv/plts
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - name: Create PLT
+        if: steps.plt-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p priv/plts
+          mix dialyzer --plt
+      - name: Dialyzer
+        run: MIX_ENV=dev mix dialyzer --no-check

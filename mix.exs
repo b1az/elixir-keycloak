@@ -10,6 +10,7 @@ defmodule Keycloak.Mixfile do
       description: "Library for interacting with a Keycloak authorization server",
       package: package(),
       deps: deps(),
+      dialyzer: dialyzer(),
       docs: [extras: ["README.md"], main: "readme"],
       source_url: "https://github.com/vanetix/elixir-keycloak"
     ]
@@ -26,9 +27,17 @@ defmodule Keycloak.Mixfile do
       {:oauth2, "~> 2.0"},
       {:plug, "~> 1.4"},
       {:poison, "~> 4.0"},
+      {:dialyxir, "~> 1.1.0", runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.26", only: :dev, runtime: false},
       {:rexbug, "~> 1.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_deps: :app_tree,
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 
